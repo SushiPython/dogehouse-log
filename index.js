@@ -1,8 +1,20 @@
 const WebSocket = require('ws');
 const MongoClient = require('mongodb').MongoClient
-
+const express = require('express');
+const nunjucks = require('nunjucks')
+const bodyParser = require('body-parser')
 
 const ws = new WebSocket('wss://api.dogehouse.tv/socket');
+const app = express()
+
+
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app
+});
+
+
+app.use(bodyParser.json())
 
 const auth = JSON.stringify({
   "op": "auth",
@@ -27,7 +39,7 @@ ws.on('open', function open() {
   ws.send(fetchTop)
   setInterval(function(){
     ws.send(fetchTop)
-    console.log('fetched')
+    console.log(`fetched at ${new Date()}`)
   }, 60000)
   setInterval(function(){
     ws.send('ping')
@@ -62,6 +74,22 @@ ws.on('message', function incoming(data) {
   }
 });
 
+app.get('/', (req, res) => {
+  MongoClient.connect(process.env.url, async function(err, db) {
+    let coll = db.db('dogehouse').collection('room-logger')
+    let data = await coll.find({}).toArray()
+    var [times, users, servers] = [data.map(o => o['time']), data.map(o => o['users']), data.map(o => o['servers'])]
+    times = times.map(function (val) {
+      return `${val.getUTCMonth()}/${val.getUTCDate()}/${val.getUTCFullYear()} ${val.getUTCHours()}:${val.getUTCMinutes()}:${val.getUTCSeconds()}`
+    })
+    res.render('index.html', {'times': times,'users': users,'servers': servers})
+  })
+})
+
 ws.on('close', function() {
   console.log('closed')
 })
+
+app.listen(3000, () => {
+  console.log('server started');
+});

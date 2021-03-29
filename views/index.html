@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DogeHouse Logger</title>
+</head>
+<body>
+  <h1 style="text-align: center">DogeHouse Logger</h1>
+  <canvas height=600 width=800 id="myChart"></canvas>
+<script>
+  Chart.defaults.global.responsive = false;
+  const chartData = {
+  labels: [{% for item in times %}
+              "{{item}}",
+            {% endfor %}],
+  datasets : [{
+    label: 'Connected Users',
+    fill: true,
+    lineTension: 0.1,
+    backgroundColor: "rgba(75,192,192,0.4)",
+    borderColor: "rgba(75,192,192,1)",
+    borderCapStyle: 'butt',
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: 'miter',
+    pointBorderColor: "rgba(75,192,192,1)",
+    pointBackgroundColor: "#fff",
+    pointBorderWidth: 1,
+    pointHoverRadius: 5,
+    pointHoverBackgroundColor: "rgba(75,192,192,1)",
+    pointHoverBorderColor: "rgba(220,220,220,1)",
+    pointHoverBorderWidth: 2,
+    pointRadius: 1,
+    pointHitRadius: 10,
+    data: [{% for item in users %}
+              {{item}},
+            {% endfor %}],
+    spanGaps: false
+  },
+  {
+    label: 'Public Servers',
+    fill: true,
+    lineTension: 0.1,
+    backgroundColor: "rgba(123, 74, 191, 0.4)",
+    borderColor: "rgba(123, 74, 191, 0.4)",
+    borderCapStyle: 'butt',
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: 'miter',
+    pointBorderColor: "rgba(123, 74, 191, 1)",
+    pointBackgroundColor: "#fff",
+    pointBorderWidth: 1,
+    pointHoverRadius: 5,
+    pointHoverBackgroundColor: "rgba(123, 74, 191, 1)",
+    pointHoverBorderColor: "rgba(220,220,220,1)",
+    pointHoverBorderWidth: 2,
+    pointRadius: 1,
+    pointHitRadius: 10,
+    data: [{% for item in servers %}
+              {{item}},
+            {% endfor %}],
+    spanGaps: false
+  }]
+}
+const options = {
+  scales: {
+    yAxes: [{
+      ticks: {
+        precision: 0
+      }
+    }]
+  }
+}
+var ctx = document.getElementById('myChart').getContext('2d');
+var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: chartData,
+    options: options
+});
+</script>
+</body>
+</html>
+<style>
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+#myChart {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
