@@ -1,0 +1,30 @@
+<html>
+<head>
+<script src="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/dygraph/2.1.0/dygraph.min.css" />
+</head>
+<body>
+  <h1>DogeHouse Logger</h1>
+  <div id="graphdiv2" style="width:800px; height:600px;"></div>
+<script>
+  g2 = new Dygraph(
+    document.getElementById("graphdiv2"),
+    'https://dhl.sushipython.us/api/csv'
+  );
+</script>
+</body>
+</html>
+<style>
+  h1 {
+    text-align: center
+  }
+  * {
+    font-family: 'Montserrat', sans-serif;
+  }
+  #graphdiv2 {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+  }
+</style>
